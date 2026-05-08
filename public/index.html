@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UNO Vibe Code - Lobby</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/lobby.css">
+</head>
+<body>
+	<div class="lobby-shell">
+		<div class="lobby-panel">
+			<h1>🎰 UNO VIBE CODE</h1>
+			<p class="lobby-subtitle">Real-Time Multiplayer Gambling Edition</p>
+
+			<!-- Card fan decoration -->
+			<div class="card-fan">
+				<div class="card">🃏</div>
+				<div class="card">🎴</div>
+				<div class="card">♠</div>
+				<div class="card">♥</div>
+				<div class="card">♦</div>
+			</div>
+
+			<!-- Action buttons -->
+			<div class="action-buttons">
+				<button class="btn-primary" id="create-room-btn">
+					<i class="fa-solid fa-plus"></i> Create Room
+				</button>
+				<button class="btn-secondary" id="join-room-btn">
+					<i class="fa-solid fa-door-open"></i> Join Room
+				</button>
+			</div>
+
+			<p class="lobby-subtitle" style="font-size: 0.75rem; margin-top: 20px; opacity: 0.7;">
+				Connect with up to 4 players • WebSocket real-time • Share room code with friends
+			</p>
+		</div>
+	</div>
+
+	<!-- CREATE ROOM MODAL -->
+	<div class="modal-overlay" id="create-modal">
+		<div class="modal-dialog">
+			<button class="modal-close" id="create-modal-close">&times;</button>
+			<h2><span class="suit-icon">🎴</span> Deal Me In</h2>
+			<p class="modal-subtitle">Create a new game room</p>
+
+			<form id="create-form">
+				<div class="form-group">
+					<label for="create-name">Your Name</label>
+					<input type="text" id="create-name" placeholder="Enter your name" maxlength="20" required>
+					<div class="error-inline" id="create-name-error"></div>
+				</div>
+
+				<div class="form-group">
+					<label for="create-password">Room Password (Optional)</label>
+					<input type="text" id="create-password" placeholder="Leave blank for open room" maxlength="20">
+					<div class="error-inline" id="create-password-error"></div>
+				</div>
+
+				<div class="form-group">
+					<label>Game Mode</label>
+					<div class="radio-group">
+						<div class="radio-chip">
+							<input type="radio" id="mode-ffa" name="game-mode" value="ffa" checked required>
+							<label for="mode-ffa">Free For All (Standard UNO)</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>Max Players</label>
+					<div class="number-selector">
+						<button type="button" class="number-btn" data-max="2">2</button>
+						<button type="button" class="number-btn" data-max="3">3</button>
+						<button type="button" class="number-btn selected" data-max="4">4</button>
+					</div>
+				</div>
+
+				<div class="modal-buttons">
+					<button type="submit" class="btn-submit">
+						<i class="fa-solid fa-cards"></i> Create Room
+					</button>
+					<button type="button" class="btn-cancel" id="create-cancel">Cancel</button>
+				</div>
+			</form>
+
+			<div id="create-loading" class="loading-state hidden">
+				<div class="spinner"></div>
+				<p>Creating your table...</p>
+			</div>
+
+			<div id="create-success" class="room-code-display hidden">
+				<div class="label">Your Room Code</div>
+				<div class="code" id="room-code-display"></div>
+				<button type="button" class="btn-copy" id="copy-code-btn">
+					<i class="fa-solid fa-copy"></i> Copy Code
+				</button>
+				<p class="label" style="margin-top: 12px;">Share this code with friends!</p>
+				<button type="button" class="btn-primary" id="go-to-game-btn" style="margin-top: 12px; width: 100%;">
+					Go to Table
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- JOIN ROOM MODAL -->
+	<div class="modal-overlay" id="join-modal">
+		<div class="modal-dialog">
+			<button class="modal-close" id="join-modal-close">&times;</button>
+			<h2><span class="suit-icon">🪑</span> Take a Seat</h2>
+			<p class="modal-subtitle">Join an existing game</p>
+
+			<form id="join-form">
+				<div class="form-group">
+					<label for="join-name">Your Name</label>
+					<input type="text" id="join-name" placeholder="Enter your name" maxlength="20" required>
+					<div class="error-inline" id="join-name-error"></div>
+				</div>
+
+				<div class="form-group">
+					<label for="join-code">Room Code</label>
+					<input type="text" id="join-code" placeholder="6-character code (e.g. XKZP4W)" maxlength="6" style="text-transform: uppercase;" required>
+					<div class="error-inline" id="join-code-error"></div>
+				</div>
+
+				<div class="form-group">
+					<label for="join-password">Room Password (if required)</label>
+					<input type="text" id="join-password" placeholder="Leave blank if no password" maxlength="20">
+					<div class="error-inline" id="join-password-error"></div>
+				</div>
+
+				<div class="modal-buttons">
+					<button type="submit" class="btn-submit">
+						<i class="fa-solid fa-sign-in-alt"></i> Join Room
+					</button>
+					<button type="button" class="btn-cancel" id="join-cancel">Cancel</button>
+				</div>
+			</form>
+
+			<div id="join-loading" class="loading-state hidden">
+				<div class="spinner"></div>
+				<p>Finding your table...</p>
+			</div>
+
+			<div id="join-waiting" class="waiting-room hidden">
+				<h3 style="color: var(--vegas-gold); margin-bottom: 16px;">Waiting for host to start...</h3>
+				<div class="player-list">
+					<div class="title">Players Joined</div>
+					<div id="joined-players-list"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+	<script src="/js/animations.js"></script>
+	<script src="/js/lobby.js"></script>
+</body>
+</html>
+

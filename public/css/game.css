@@ -1,0 +1,777 @@
+/* Game page layout */
+.game-shell {
+	min-height: 100vh;
+	padding: 20px;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	gap: 16px;
+	position: relative;
+}
+
+/* Top bar */
+.game-topbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 20px;
+	border: 2px solid var(--vegas-gold);
+	border-radius: 12px;
+	padding: 16px 24px;
+	background: linear-gradient(135deg, rgba(13, 31, 15, 0.6), rgba(5, 10, 5, 0.6));
+	backdrop-filter: blur(8px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.game-topbar h1 {
+	font-size: 1.6rem;
+	background: linear-gradient(90deg, var(--casino-red), var(--vegas-gold));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	margin: 0;
+}
+
+#turn-indicator {
+	color: var(--vegas-gold);
+	font-weight: 600;
+	font-size: 0.95rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+/* Main game board container */
+.game-board {
+	display: grid;
+	place-items: center;
+	position: relative;
+	flex: 1;
+}
+
+/* Felt table oval */
+.table {
+	width: min(600px, 90vw);
+	height: min(400px, 60vh);
+	border: 8px solid var(--vegas-gold);
+	border-radius: 50%;
+	background: 
+		radial-gradient(circle at 35% 35%, rgba(45, 122, 45, 0.8), rgba(13, 31, 15, 0.95)),
+		linear-gradient(135deg, #0f3020, #0a1f12);
+	box-shadow: 
+		inset 0 2px 8px rgba(212, 175, 55, 0.2),
+		inset 0 -2px 8px rgba(0, 0, 0, 0.6),
+		0 20px 60px rgba(0, 0, 0, 0.7),
+		0 0 40px rgba(212, 175, 55, 0.2);
+	position: relative;
+	display: grid;
+	place-items: center;
+}
+
+/* Diagonal felt pattern overlay */
+.table::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background-image: 
+		repeating-linear-gradient(
+			45deg,
+			transparent,
+			transparent 20px,
+			rgba(212, 175, 55, 0.02) 20px,
+			rgba(212, 175, 55, 0.02) 40px
+		);
+	pointer-events: none;
+}
+
+/* Deck and discard pile positions */
+.table-center {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	place-items: center;
+	grid-auto-flow: column;
+	pointer-events: none;
+	z-index: 2;
+}
+
+.discard-pile, .draw-pile {
+	position: relative;
+	width: 100px;
+	height: 150px;
+	pointer-events: auto;
+	cursor: pointer;
+	transition: transform 0.3s;
+}
+
+.discard-pile {
+	margin-right: 40px;
+}
+
+.draw-pile {
+	margin-left: 40px;
+}
+
+.draw-pile:hover {
+	transform: scale(1.08);
+}
+
+/* Card slot base styling */
+.card-slot-base {
+	width: 100%;
+	height: 100%;
+	border: 2px solid rgba(212, 175, 55, 0.5);
+	border-radius: 12px;
+	display: grid;
+	place-items: center;
+	background: rgba(0, 0, 0, 0.3);
+	font-size: 0.8rem;
+	color: var(--dim-text);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	position: relative;
+}
+
+.discard-pile .card-slot-base {
+	background: rgba(212, 175, 55, 0.05);
+}
+
+/* Card displayed on discard pile */
+.discard-pile .uno-card {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+/* Deck card shadows (3D effect) */
+.draw-pile .card-shadow {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border: 2px solid rgba(212, 175, 55, 0.4);
+	border-radius: 12px;
+	background: rgba(0, 0, 0, 0.5);
+	pointer-events: none;
+}
+
+.draw-pile .card-shadow:nth-child(1) {
+	transform: translateY(4px) translateX(4px);
+	opacity: 0.3;
+}
+
+.draw-pile .card-shadow:nth-child(2) {
+	transform: translateY(8px) translateX(8px);
+	opacity: 0.2;
+}
+
+/* Player seats (positioned around the table) */
+.seats-container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.seat {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	opacity: 0;
+	transition: all 0.4s ease;
+}
+
+.seat.visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.seat.active {
+	filter: drop-shadow(0 0 20px var(--vegas-gold));
+}
+
+.seat.active .seat-name {
+	animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+	0%, 100% { color: var(--vegas-gold); text-shadow: 0 0 8px var(--vegas-gold); }
+	50% { color: var(--casino-red); text-shadow: 0 0 12px var(--casino-red); }
+}
+
+/* Seat positions */
+.seat[data-seat="0"] {
+	bottom: -100px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.seat[data-seat="1"] {
+	left: -120px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.seat[data-seat="2"] {
+	top: -100px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.seat[data-seat="3"] {
+	right: -120px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.seat-info {
+	text-align: center;
+}
+
+.seat-name {
+	font-weight: 700;
+	color: var(--cream-text);
+	font-size: 0.95rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	transition: all 0.3s;
+}
+
+.seat-card-count {
+	display: inline-block;
+	background: var(--casino-red);
+	color: white;
+	padding: 4px 10px;
+	border-radius: 12px;
+	font-size: 0.75rem;
+	font-weight: 700;
+}
+
+.seat-disconnected {
+	opacity: 0.5;
+	filter: grayscale(1);
+}
+
+.seat-disconnected .seat-name::after {
+	content: ' [DC]';
+	color: var(--casino-red);
+}
+
+/* Face-down card display for opponents */
+.opponent-hand {
+	display: flex;
+	gap: 4px;
+	flex-wrap: wrap;
+	justify-content: center;
+	max-width: 200px;
+}
+
+.opponent-hand .uno-card {
+	opacity: 0.8;
+	pointer-events: none;
+}
+
+/* Player hand (bottom) */
+.player-hand-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	width: 100%;
+	padding-bottom: 20px;
+}
+
+.hand-label {
+	color: var(--vegas-gold);
+	font-weight: 600;
+	text-transform: uppercase;
+	font-size: 0.9rem;
+	letter-spacing: 0.05em;
+}
+
+.player-hand {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	gap: -30px;
+	height: 200px;
+	perspective: 1000px;
+	position: relative;
+}
+
+/* Hand cards fan effect */
+.player-hand .uno-card {
+	cursor: pointer;
+	transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+	transform-origin: center bottom;
+	margin-left: -30px;
+}
+
+.player-hand .uno-card:first-child {
+	margin-left: 0;
+}
+
+.player-hand .uno-card.playable {
+	filter: drop-shadow(0 0 8px var(--vegas-gold));
+}
+
+.player-hand .uno-card.playable:hover {
+	transform: translateY(-30px);
+	filter: drop-shadow(0 0 16px var(--vegas-gold)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+.player-hand .uno-card.selected {
+	transform: translateY(-60px);
+	filter: drop-shadow(0 0 20px var(--vegas-gold));
+}
+
+/* Bottom control bar */
+.control-bar {
+	display: flex;
+	gap: 16px;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	padding: 16px;
+	border: 2px solid var(--border-gold);
+	border-radius: 12px;
+	background: rgba(13, 31, 15, 0.5);
+	backdrop-filter: blur(8px);
+}
+
+.uno-button {
+	padding: 12px 28px;
+	background: var(--casino-red);
+	border: 2px solid var(--vegas-gold);
+	color: white;
+	font-weight: 700;
+	border-radius: 8px;
+	cursor: pointer;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	font-size: 0.95rem;
+	transition: all 0.3s;
+}
+
+.uno-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.uno-button:not(:disabled):hover {
+	transform: scale(1.05);
+	box-shadow: 0 0 20px var(--vegas-gold), 0 8px 20px rgba(201, 48, 44, 0.4);
+	animation: pulse-btn 0.6s ease-in-out;
+}
+
+@keyframes pulse-btn {
+	0%, 100% { transform: scale(1.05); }
+	50% { transform: scale(1.1); }
+}
+
+/* Turn timer */
+.turn-timer {
+	position: relative;
+	width: 100px;
+	height: 100px;
+	display: grid;
+	place-items: center;
+	background: rgba(0, 0, 0, 0.3);
+	border: 2px solid var(--vegas-gold);
+	border-radius: 50%;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.turn-timer.active {
+	opacity: 1;
+}
+
+.turn-timer svg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	transform: rotate(-90deg);
+}
+
+.timer-circle {
+	fill: none;
+	stroke: var(--vegas-gold);
+	stroke-width: 3;
+	stroke-linecap: round;
+	stroke-dasharray: 283;
+	stroke-dashoffset: 0;
+	transition: stroke-dashoffset 0.5s linear;
+}
+
+.timer-text {
+	font-size: 2.4rem;
+	font-weight: 700;
+	color: var(--vegas-gold);
+	z-index: 2;
+}
+
+.timer-text.warning {
+	color: var(--casino-red);
+	animation: timer-pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+	0%, 100% { font-size: 2.4rem; }
+	50% { font-size: 2.6rem; }
+}
+
+/* Game over overlay */
+.game-over-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.9);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 200;
+	backdrop-filter: blur(4px);
+}
+
+.game-over-overlay.active {
+	display: flex;
+	animation: fadeIn 0.4s ease;
+}
+
+.game-over-panel {
+	background: linear-gradient(135deg, rgba(13, 31, 15, 0.95), rgba(5, 10, 5, 0.95));
+	border: 3px solid var(--vegas-gold);
+	border-radius: 20px;
+	padding: 40px;
+	text-align: center;
+	max-width: 600px;
+	width: 90vw;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.game-over-panel h2 {
+	font-size: 2.4rem;
+	background: linear-gradient(90deg, var(--casino-red), var(--vegas-gold));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	margin-bottom: 30px;
+	text-transform: uppercase;
+}
+
+.ranking-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-bottom: 30px;
+}
+
+.ranking-item {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 16px;
+	border-radius: 10px;
+	background: rgba(212, 175, 55, 0.1);
+	border-left: 4px solid;
+}
+
+.ranking-item.gold {
+	border-left-color: #ffd700;
+	background: rgba(255, 215, 0, 0.1);
+}
+
+.ranking-item.silver {
+	border-left-color: #c0c0c0;
+	background: rgba(192, 192, 192, 0.1);
+}
+
+.ranking-item.bronze {
+	border-left-color: #cd7f32;
+	background: rgba(205, 127, 50, 0.1);
+}
+
+.ranking-item.other {
+	border-left-color: var(--vegas-gold);
+}
+
+.ranking-place {
+	font-size: 1.4rem;
+	font-weight: 700;
+	width: 50px;
+	color: var(--vegas-gold);
+}
+
+.ranking-name {
+	flex: 1;
+	text-align: left;
+	font-size: 1.1rem;
+	color: var(--cream-text);
+	font-weight: 600;
+}
+
+/* Side panel for game log */
+.side-panel {
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 280px;
+	height: 100vh;
+	background: rgba(13, 31, 15, 0.8);
+	border-left: 2px solid var(--vegas-gold);
+	overflow-y: auto;
+	padding: 20px;
+	z-index: 50;
+	display: none;
+}
+
+.side-panel.active {
+	display: flex;
+	flex-direction: column;
+}
+
+.side-panel h3 {
+	color: var(--vegas-gold);
+	font-size: 0.95rem;
+	text-transform: uppercase;
+	margin-bottom: 16px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid var(--border-gold);
+}
+
+.game-log {
+	flex: 1;
+	overflow-y: auto;
+}
+
+.log-entry {
+	font-size: 0.85rem;
+	margin-bottom: 8px;
+	padding: 8px;
+	border-radius: 6px;
+	background: rgba(0, 0, 0, 0.2);
+	color: var(--dim-text);
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+	line-height: 1.4;
+}
+
+.log-entry .icon {
+	font-size: 1rem;
+	flex-shrink: 0;
+	min-width: 20px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+	.game-shell {
+		padding: 12px;
+		gap: 12px;
+	}
+
+	.table {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 3 / 2;
+		max-width: 500px;
+	}
+
+	.player-hand {
+		height: 140px;
+	}
+
+	.control-bar {
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.side-panel {
+		width: 240px;
+	}
+}
+
+@media (max-width: 768px) {
+	.seat[data-seat="1"],
+	.seat[data-seat="3"] {
+		display: none;
+	}
+
+	.game-topbar {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.player-hand .uno-card {
+		width: 65px;
+		height: 100px;
+		margin-left: -25px;
+	}
+
+	.side-panel {
+		width: 100%;
+		height: auto;
+		position: fixed;
+		bottom: 0;
+		right: auto;
+		left: 0;
+		border-left: none;
+		border-top: 2px solid var(--vegas-gold);
+		max-height: 200px;
+	}
+
+	.game-shell {
+		grid-template-rows: auto 1fr;
+  }
+}
+/* ===== UNO CARD STYLING ===== */
+
+.uno-card {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	cursor: pointer;
+	user-select: none;
+	-webkit-user-select: none;
+	transition: all 0.2s ease;
+}
+
+/* Card Inner */
+.card-inner {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	color: white;
+	font-weight: 700;
+}
+
+/* Card Back */
+.uno-card.face-down .card-inner {
+	display: none;
+}
+
+.card-back {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	color: #d4af37;
+	font-size: 1.2rem;
+	font-weight: 700;
+	font-family: 'Cinzel Decorative', cursive;
+	letter-spacing: 0.1em;
+}
+
+.back-pattern {
+	position: absolute;
+	inset: 0;
+	background: repeating-linear-gradient(
+		45deg,
+		transparent,
+		transparent 10px,
+		rgba(201, 48, 44, 0.3) 10px,
+		rgba(201, 48, 44, 0.3) 20px
+	);
+	border-radius: 9px;
+}
+
+.back-logo {
+	position: relative;
+	z-index: 2;
+}
+
+/* Card Corners */
+.card-corner {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	font-size: 0.9em;
+}
+
+.card-corner.top-left {
+	top: 6px;
+	left: 6px;
+}
+
+.card-corner.bottom-right {
+	bottom: 6px;
+	right: 6px;
+	transform: rotate(180deg);
+}
+
+.card-value {
+	line-height: 1;
+	font-weight: 700;
+}
+
+.card-symbol {
+	font-size: 0.8em;
+	opacity: 0.9;
+}
+
+/* Card Center */
+.card-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 60%;
+	height: 70%;
+	background: rgba(255, 255, 255, 0.95);
+	border-radius: 8px;
+	color: #333;
+	font-weight: 700;
+	font-size: 1.1em;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-center .wild-icon {
+	font-size: 2em;
+}
+
+.card-center::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent);
+	border-radius: 8px;
+	pointer-events: none;
+}
+
+/* Card States */
+.uno-card.playable {
+	filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+}
+
+.uno-card.playable:hover {
+	transform: translateY(-12px) scale(1.05);
+	filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.8));
+}
+
+.uno-card.selected {
+	transform: translateY(-20px) scale(1.08);
+	filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.9));
+}
+
+/* Accessibility */
+.uno-card[aria-label] {
+	/* Screen reader label for accessibility */
+}

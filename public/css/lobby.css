@@ -1,0 +1,543 @@
+/* Lobby page container */
+.lobby-shell {
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	padding: 40px 20px;
+	position: relative;
+	overflow: hidden;
+}
+
+/* Background suit symbols */
+.lobby-shell::before {
+	content: '♠ ♥ ♦ ♣ ♠ ♥ ♦ ♣';
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	font-size: 120px;
+	color: rgba(201, 48, 44, 0.05);
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	place-items: center;
+	pointer-events: none;
+	z-index: 0;
+}
+
+.lobby-shell::after {
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: 
+		repeating-linear-gradient(
+			45deg,
+			transparent,
+			transparent 35px,
+			rgba(212, 175, 55, 0.03) 35px,
+			rgba(212, 175, 55, 0.03) 70px
+		);
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* Main content wrapper */
+.lobby-panel {
+	width: min(800px, 100%);
+	border: 2px solid var(--vegas-gold);
+	border-radius: 18px;
+	background: 
+		linear-gradient(135deg, rgba(13, 31, 15, 0.8), rgba(5, 10, 5, 0.8)),
+		radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.1), transparent);
+	backdrop-filter: blur(12px);
+	padding: 60px 40px;
+	text-align: center;
+	position: relative;
+	z-index: 1;
+	box-shadow: 
+		0 20px 60px rgba(0, 0, 0, 0.7),
+		inset 0 1px 0 rgba(212, 175, 55, 0.2),
+		0 0 40px rgba(201, 48, 44, 0.15);
+}
+
+.lobby-panel h1 {
+	font-size: clamp(2.4rem, 8vw, 4rem);
+	background: linear-gradient(135deg, var(--casino-red), var(--vegas-gold));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	margin-bottom: 10px;
+	text-shadow: 0 4px 20px rgba(201, 48, 44, 0.3);
+	animation: logoGlow 3s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+	0%, 100% { filter: drop-shadow(0 0 8px rgba(201, 48, 44, 0.4)); }
+	50% { filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.4)); }
+}
+
+.lobby-subtitle {
+	font-size: 0.95rem;
+	color: var(--vegas-gold);
+	letter-spacing: 0.15em;
+	margin-bottom: 40px;
+	text-transform: uppercase;
+	font-weight: 600;
+	opacity: 0.9;
+}
+
+/* Card fan decoration */
+.card-fan {
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	height: 160px;
+	margin: 30px 0;
+	perspective: 1000px;
+}
+
+.card-fan .card {
+	width: 60px;
+	height: 90px;
+	background: linear-gradient(135deg, var(--card-red), #8b0000);
+	border: 2px solid var(--vegas-gold);
+	border-radius: 8px;
+	display: grid;
+	place-items: center;
+	font-size: 2rem;
+	margin: 0 -15px;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+	transform-origin: bottom center;
+	color: white;
+}
+
+.card-fan .card:nth-child(1) { transform: rotateZ(-40deg) translateY(20px); }
+.card-fan .card:nth-child(2) { transform: rotateZ(-20deg); }
+.card-fan .card:nth-child(3) { transform: rotateZ(0deg) scaleY(1.05); }
+.card-fan .card:nth-child(4) { transform: rotateZ(20deg); }
+.card-fan .card:nth-child(5) { transform: rotateZ(40deg) translateY(20px); }
+
+/* Action buttons */
+.action-buttons {
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin: 40px 0;
+}
+
+.btn-primary, .btn-secondary {
+	padding: 16px 32px;
+	font-size: 1.1rem;
+	font-weight: 700;
+	border-radius: 10px;
+	border: 2px solid var(--vegas-gold);
+	background: transparent;
+	color: var(--cream-text);
+	cursor: pointer;
+	transition: all 0.3s ease;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	min-width: 200px;
+}
+
+.btn-primary {
+	background: var(--casino-red);
+	border-color: var(--vegas-gold);
+	color: white;
+}
+
+.btn-primary:hover {
+	transform: scale(1.05);
+	box-shadow: 0 8px 25px rgba(201, 48, 44, 0.6), 0 0 20px var(--vegas-gold);
+}
+
+.btn-secondary {
+	background: rgba(212, 175, 55, 0.1);
+	border-color: var(--vegas-gold);
+}
+
+.btn-secondary:hover {
+	background: rgba(212, 175, 55, 0.2);
+	box-shadow: 0 0 20px var(--vegas-gold);
+	transform: scale(1.02);
+}
+
+/* Modal overlay */
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.75);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 100;
+	backdrop-filter: blur(4px);
+}
+
+.modal-overlay.active {
+	display: flex;
+	animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+/* Modal dialog */
+.modal-dialog {
+	background: 
+		linear-gradient(135deg, rgba(13, 31, 15, 0.95), rgba(5, 10, 5, 0.95));
+	border: 2px solid var(--vegas-gold);
+	border-radius: 16px;
+	padding: 40px;
+	width: min(500px, 90vw);
+	max-height: 90vh;
+	overflow-y: auto;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+	animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+	position: relative;
+	z-index: 101;
+}
+
+@keyframes modalSlideIn {
+	from {
+		opacity: 0;
+		transform: scale(0.8) translateY(-50px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+.modal-dialog h2 {
+	font-size: 1.8rem;
+	color: var(--vegas-gold);
+	margin-bottom: 8px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.modal-dialog .suit-icon {
+	font-size: 2rem;
+}
+
+.modal-subtitle {
+	color: var(--dim-text);
+	font-size: 0.9rem;
+	margin-bottom: 30px;
+}
+
+/* Form group */
+.form-group {
+	margin-bottom: 24px;
+	text-align: left;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 8px;
+	color: var(--vegas-gold);
+	font-weight: 600;
+	font-size: 0.95rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.form-group input,
+.form-group textarea {
+	width: 100%;
+	font-size: 1rem;
+}
+
+/* Radio buttons styled as chips */
+.radio-group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.radio-chip {
+	display: flex;
+	align-items: center;
+	padding: 12px 16px;
+	border: 2px solid var(--border-gold);
+	border-radius: 8px;
+	background: rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+	transition: all 0.2s;
+	color: var(--cream-text);
+}
+
+.radio-chip input[type="radio"] {
+	margin-right: 10px;
+	cursor: pointer;
+	width: 18px;
+	height: 18px;
+	accent-color: var(--vegas-gold);
+}
+
+.radio-chip:hover {
+	border-color: var(--vegas-gold);
+	background: rgba(212, 175, 55, 0.1);
+}
+
+.radio-chip input[type="radio"]:checked + label {
+	color: var(--vegas-gold);
+}
+
+/* Number selector */
+.number-selector {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+	margin: 16px 0;
+}
+
+.number-btn {
+	width: 60px;
+	height: 60px;
+	border: 2px solid var(--border-gold);
+	background: rgba(0, 0, 0, 0.2);
+	color: var(--cream-text);
+	border-radius: 8px;
+	font-size: 1.4rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.number-btn:hover {
+	border-color: var(--vegas-gold);
+	background: rgba(212, 175, 55, 0.1);
+}
+
+.number-btn.selected {
+	background: var(--casino-red);
+	border-color: var(--vegas-gold);
+	color: white;
+	box-shadow: 0 0 15px var(--vegas-gold);
+}
+
+/* Modal close button */
+.modal-close {
+	position: absolute;
+	top: 16px;
+	right: 16px;
+	background: transparent;
+	border: none;
+	color: var(--vegas-gold);
+	font-size: 1.5rem;
+	cursor: pointer;
+	padding: 8px;
+	display: grid;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	transition: all 0.2s;
+}
+
+.modal-close:hover {
+	transform: rotate(90deg);
+	color: var(--casino-red);
+}
+
+/* Form buttons */
+.modal-buttons {
+	display: flex;
+	gap: 12px;
+	margin-top: 32px;
+}
+
+.modal-buttons button {
+	flex: 1;
+	padding: 14px;
+	font-size: 1rem;
+	font-weight: 700;
+	border: 2px solid;
+	border-radius: 8px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	transition: all 0.3s;
+}
+
+.btn-submit {
+	background: var(--casino-red);
+	border-color: var(--vegas-gold);
+	color: white;
+}
+
+.btn-submit:hover {
+	box-shadow: 0 0 20px var(--vegas-gold), 0 8px 20px rgba(201, 48, 44, 0.4);
+	transform: translateY(-2px);
+}
+
+.btn-cancel {
+	background: rgba(212, 175, 55, 0.1);
+	border-color: var(--border-gold);
+	color: var(--cream-text);
+}
+
+.btn-cancel:hover {
+	background: rgba(212, 175, 55, 0.2);
+	border-color: var(--vegas-gold);
+}
+
+/* Room code display */
+.room-code-display {
+	text-align: center;
+	margin: 30px 0;
+	padding: 20px;
+	border: 2px dashed var(--vegas-gold);
+	border-radius: 10px;
+	background: rgba(212, 175, 55, 0.05);
+}
+
+.room-code-display .label {
+	color: var(--dim-text);
+	font-size: 0.85rem;
+	text-transform: uppercase;
+	margin-bottom: 8px;
+}
+
+.room-code-display .code {
+	font-size: 2.4rem;
+	font-family: 'Courier New', monospace;
+	color: var(--vegas-gold);
+	letter-spacing: 0.1em;
+	font-weight: 700;
+	margin-bottom: 12px;
+}
+
+.btn-copy {
+	background: var(--casino-red);
+	border: 2px solid var(--vegas-gold);
+	color: white;
+	padding: 10px 20px;
+	font-weight: 600;
+	cursor: pointer;
+	border-radius: 6px;
+	transition: all 0.3s;
+}
+
+.btn-copy:hover {
+	box-shadow: 0 0 15px var(--vegas-gold);
+	transform: scale(1.05);
+}
+
+/* Error/inline validation */
+.error-inline {
+	color: var(--casino-red);
+	font-size: 0.85rem;
+	margin-top: 6px;
+	display: none;
+}
+
+.error-inline.show {
+	display: block;
+}
+
+/* Loading state */
+.loading-state {
+	text-align: center;
+	padding: 40px 20px;
+}
+
+.loading-state .spinner {
+	margin: 0 auto 20px;
+}
+
+.loading-state p {
+	color: var(--dim-text);
+}
+
+/* Waiting room UI */
+.waiting-room {
+	text-align: center;
+}
+
+.player-list {
+	background: rgba(0, 0, 0, 0.3);
+	border: 1px solid var(--border-gold);
+	border-radius: 8px;
+	padding: 20px;
+	margin: 20px 0;
+	text-align: left;
+}
+
+.player-list .title {
+	color: var(--vegas-gold);
+	font-weight: 600;
+	margin-bottom: 12px;
+}
+
+.player-item {
+	display: flex;
+	align-items: center;
+	padding: 8px 0;
+	color: var(--cream-text);
+}
+
+.player-item .seat-num {
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+	background: var(--casino-red);
+	border-radius: 50%;
+	display: grid;
+	place-items: center;
+	font-weight: 700;
+	margin-right: 10px;
+	color: white;
+}
+
+.player-item .name {
+	flex: 1;
+}
+
+.player-item .badge {
+	background: var(--vegas-gold);
+	color: var(--felt-black);
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 0.8rem;
+	font-weight: 700;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.lobby-panel {
+		padding: 30px 20px;
+	}
+
+	.action-buttons {
+		gap: 12px;
+	}
+
+	.btn-primary, .btn-secondary {
+		min-width: 140px;
+		padding: 12px 20px;
+		font-size: 1rem;
+	}
+
+	.card-fan {
+		height: 120px;
+	}
+
+	.card-fan .card {
+		width: 50px;
+		height: 75px;
+		margin: 0 -10px;
+		font-size: 1.5rem;
+	}
+}

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UNO Vibe Code - Table</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/game.css">
+</head>
+<body>
+	<div class="game-shell">
+		<!-- Top bar -->
+		<header class="game-topbar">
+			<h1>UNO TABLE</h1>
+			<div id="turn-indicator">
+				<span id="current-player-name">Waiting for game...</span>
+			</div>
+			<button id="sound-toggle" class="btn-icon" title="Toggle sound">
+				<i class="fa-solid fa-volume-high"></i>
+			</button>
+		</header>
+
+		<!-- Main game board -->
+		<div class="game-board">
+			<!-- Seats container (opponent positions) -->
+			<div class="seats-container">
+				<div class="seat" data-seat="0"></div>
+				<div class="seat" data-seat="1"></div>
+				<div class="seat" data-seat="2"></div>
+				<div class="seat" data-seat="3"></div>
+			</div>
+
+			<!-- Felt table -->
+			<div class="table">
+				<!-- Table center: deck and discard pile -->
+				<div class="table-center">
+					<!-- Discard pile (right) -->
+					<div class="discard-pile">
+						<div class="card-slot-base">
+							<span>Discard</span>
+						</div>
+					</div>
+
+					<!-- Draw pile (left) -->
+					<div class="draw-pile">
+						<div class="card-shadow"></div>
+						<div class="card-shadow"></div>
+						<div class="card-shadow"></div>
+						<div class="card-slot-base">
+							<span>Draw</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Player hand and controls -->
+		<div class="player-hand-section">
+			<div class="hand-label">Your Hand</div>
+			<div class="player-hand" id="player-hand"></div>
+
+			<!-- Control bar -->
+			<div class="control-bar">
+				<button class="uno-button" id="uno-btn" disabled>
+					<i class="fa-solid fa-star"></i> UNO!
+				</button>
+				<div class="turn-timer" id="turn-timer">
+					<svg viewBox="0 0 100 100">
+						<circle class="timer-circle" cx="50" cy="50" r="45"></circle>
+					</svg>
+					<div class="timer-text" id="timer-text">30</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Game over overlay -->
+	<div class="game-over-overlay" id="game-over-overlay">
+		<div class="game-over-panel">
+			<h2>🎉 GAME OVER</h2>
+			<div class="ranking-list" id="ranking-list"></div>
+			<button class="btn-primary" id="back-to-lobby-btn" style="margin-top: 20px; width: 100%;">
+				<i class="fa-solid fa-door-open"></i> Back to Lobby
+			</button>
+		</div>
+	</div>
+
+	<!-- Side panel for game log -->
+	<div class="side-panel" id="side-panel">
+		<h3>Game Log</h3>
+		<div class="game-log" id="game-log"></div>
+	</div>
+
+	<!-- Wild color picker (hidden by default) -->
+	<div id="wild-color-overlay"></div>
+
+	<!-- Toast container -->
+	<div class="toast-container" id="toast-container"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+	<script src="/js/cards.js"></script>
+	<script src="/js/animations.js"></script>
+	<script src="/js/toast.js"></script>
+	<script src="/js/game.js"></script>
+</body>
+</html>
+
